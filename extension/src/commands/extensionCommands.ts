@@ -72,8 +72,8 @@ export class UpdateExtensionCommand implements Command {
         if (!(await this.extensionInfo.didExtensionUpdate(pkg))) {
             await install.showReloadPrompt(
                 localize(
-                    'reload.to.complete.update',
-                    'Please reload Visual Studio Code to complete updating the extension {0}.',
+                    'to.complete.update',
+                    'to complete updating the extension {0}.',
                     pkg.displayName,
                 ),
             );
@@ -97,8 +97,8 @@ export class UninstallExtensionCommand implements Command {
         if (await this.extensionInfo.getExtension(extensionId)) {
             await install.showReloadPrompt(
                 localize(
-                    'reload.to.complete.uninstall',
-                    'Please reload Visual Studio Code to complete uninstalling the extension {0}.',
+                    'to.complete.uninstall',
+                    'to complete uninstalling the extension {0}.',
                     extensionId,
                 ),
             );
@@ -317,8 +317,8 @@ function installExtension(provider: RegistryProvider, extensionOrId: Package | s
 async function showInstallReloadPrompt(pkg: Package) {
     return await install.showReloadPrompt(
         localize(
-            'reload.to.complete.install',
-            'Please reload Visual Studio Code to complete installing the extension {0}.',
+            'to.complete.install',
+            'to complete installing the extension {0}.',
             pkg.displayName,
         ),
     );

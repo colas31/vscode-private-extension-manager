@@ -122,3 +122,12 @@ export function uriEquals(a: Uri, b: Uri): boolean {
 export function formatExtensionId(publisher: string, name: string): string {
     return `${publisher}.${name}`.toLowerCase();
 }
+
+/**
+ * Returns a Promise that will resolve in after the given duration.
+ *
+ * @param durationInMs The duration to wait, in ms.
+ */
+ export function sleep(durationInMs: number) {
+    return new Promise(resolve => setTimeout(resolve, durationInMs));
+  }

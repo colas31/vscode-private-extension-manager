@@ -6,8 +6,11 @@ import { findPackage } from './findPackage';
 import { Package } from './Package';
 import { Registry } from './Registry';
 import { RegistryProvider } from './RegistryProvider';
+import { getConfig, sleep } from './util';
 
 const localize = nls.loadMessageBundle();
+
+const DEFAULT_AUTO_RELOAD = false;
 
 /**
  * Installs the given extension package.
@@ -89,7 +92,7 @@ export async function updateExtensions(extensionInfo: ExtensionInfoService, pack
         await showReloadPrompt(
             localize(
                 'reload.to.complete.update.all',
-                'Please reload Visual Studio Code to complete updating the extensions.',
+                'to complete updating the extensions.',
             ),
         );
     }
@@ -97,10 +100,28 @@ export async function updateExtensions(extensionInfo: ExtensionInfoService, pack
 
 /**
  * Displays a message with a button to reload vscode.
- * @param message The message to display.
+ * @param suffixMessage The reason to reload VSCode. The message will be displayed in a "popin".
  */
-export async function showReloadPrompt(message: string): Promise<void> {
-    const reload = await vscode.window.showInformationMessage(message, localize('reload.now', 'Reload Now'));
+export async function showReloadPrompt(suffixMessage: string): Promise<void> {
+    let reload: any;
+
+    if (getAutoReload()) {
+        const message = localize(
+            'automatic.reload',
+            'Visual Studio Code will restart in 3 secondes {0}.',
+            suffixMessage,
+        );
+        vscode.window.showInformationMessage(message);
+        await sleep(3000);
+        reload = true;
+    } else {
+        const message = localize(
+            'reload',
+            'Please reload Visual Studio Code {0}.',
+            suffixMessage,
+        );
+        reload = await vscode.window.showInformationMessage(message, localize('reload.now', 'Reload Now'));
+    }
     if (reload) {
         vscode.commands.executeCommand('workbench.action.reloadWindow');
     }
@@ -135,4 +156,11 @@ async function installExtensionById(registry: Registry | RegistryProvider, exten
     await installExtensionByPackage(pkg);
 
     return pkg;
+}
+
+function getAutoReload() {
+    const config = getConfig();
+    const autoUpdate = config.get<boolean>('autoReload', DEFAULT_AUTO_RELOAD);
+
+    return autoUpdate;
 }

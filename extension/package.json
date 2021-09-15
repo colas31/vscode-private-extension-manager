@@ -82,6 +82,12 @@
                     "scope": "machine",
                     "description": "%configuration.allowInsecureContent.description%",
                     "default": false
+                },
+                "privateExtensions.autoReload": {
+                    "type": "boolean",
+                    "scope": "machine",
+                    "description": "%configuration.autoReload.description%",
+                    "default": false
                 }
             }
         },
