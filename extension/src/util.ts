@@ -128,6 +128,6 @@ export function formatExtensionId(publisher: string, name: string): string {
  *
  * @param durationInMs The duration to wait, in ms.
  */
- export function sleep(durationInMs: number) {
-    return new Promise(resolve => setTimeout(resolve, durationInMs));
-  }
+export function sleep(durationInMs: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, durationInMs));
+}
