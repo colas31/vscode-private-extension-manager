@@ -1,10 +1,12 @@
 import * as semver from 'semver';
+import { gte } from 'semver';
 import * as vscode from 'vscode';
 import * as nls from 'vscode-nls/node';
 
 import { context } from './context';
 import { getLogger } from './logger';
 import { Package } from './Package';
+import { toString } from './util';
 
 const localize = nls.loadMessageBundle();
 
@@ -74,7 +76,7 @@ export class ExtensionInfoService implements vscode.Disposable {
                 localize(
                     'warn.register.fail',
                     'Warning: Failed to register remote extension listener:\n{0}',
-                    ex.toString(),
+                    toString(ex),
                 ),
             );
         }
@@ -200,7 +202,7 @@ export class ExtensionInfoService implements vscode.Disposable {
     }
 
     /**
-     * Gets whether the currently-installed version of the extension is newer than
+     * Gets whether the currently-installed version of the extension is newer or egual than
      * the version of the given package.
      */
     public async didExtensionUpdate(pkg: Package): Promise<boolean> {
@@ -212,7 +214,7 @@ export class ExtensionInfoService implements vscode.Disposable {
             return false;
         }
 
-        return extension.version > pkg.version;
+        return gte(extension.version, pkg.version);
     }
 
     /**
@@ -246,7 +248,7 @@ export class ExtensionInfoService implements vscode.Disposable {
                 return uiExtension ? toExtensionInfo(uiExtension) : undefined;
             } catch (ex) {
                 getLogger().log(
-                    localize('warn.remote.helper.fail', 'Failed to call remote helper:\n{0}', ex.toString()),
+                    localize('warn.remote.helper.fail', 'Failed to call remote helper:\n{0}', toString(ex)),
                 );
             }
         }
